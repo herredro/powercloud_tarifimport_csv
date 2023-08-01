@@ -16,7 +16,7 @@ def upload_file():
         df = pd.read_csv(file, delimiter=';')
         df = pandas_transform(df)
         # Save the dataframe to a CSV string
-        csv_string = df.to_csv(sep=';', index=False)
+        csv_string = df.to_csv(sep=';', index=False, quoting=0)
         # data.to_csv('/mnt/data/powercloud-bc-2023-07-31_Gas_corrected.csv', sep=';', index=False)
 
         # Create a generator for the CSV string
