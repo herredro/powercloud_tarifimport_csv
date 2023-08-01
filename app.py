@@ -13,7 +13,7 @@ def upload_file():
         name, extension = os.path.splitext(file.filename)
         filename = f"{name}_edit{extension}"
         
-        df = pd.read_csv(file)
+        df = pd.read_csv(file, delimiter=';')
         df = pandas_transform(df)
         # Save the dataframe to a CSV string
         csv_string = df.to_csv(index=False)
@@ -29,6 +29,7 @@ def upload_file():
 def pandas_transform(df):
     # df_new = pd.DataFrame(columns=df.columns, data=[np.nan])
     # df = pd.concat([df_new, df]).reset_index(drop=True)
+    df['PLZ'] = df['PLZ'].astype(str).str.zfill(5)
     return df
 
 if __name__ == '__main__':
