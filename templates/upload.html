@@ -45,7 +45,7 @@
 <body>
     <div>
         <h1>Upload your CSV file</h1>
-        <form method="POST" enctype="multipart/form-data">
+        <form id="upload-form" method="POST" enctype="multipart/form-data">
             <input type="file" id="file-upload" class="file-upload-input" name="file" onchange="updateFilename()">
             <label for="file-upload" class="custom-file-upload">Choose file</label>
             <input type="submit" class="custom-file-upload">
@@ -53,39 +53,49 @@
         <div id="textfilename"></div>
         <div id="progress-bar"></div>
     </div>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script>
         function updateFilename() {
             var input = document.getElementById('file-upload');
             var filename = input.files[0].name;
             document.getElementById('textfilename').textContent = "Selected file: " + filename;
         }
-        $('#upload-form').on('submit', function(e) {
-            e.preventDefault();
+        document.getElementById('upload-form').addEventListener('submit', function(e) {
+        e.preventDefault();
 
-            var formData = new FormData(this);
-            $.ajax({
-                xhr: function() {
-                    var xhr = new window.XMLHttpRequest();
-                    xhr.upload.addEventListener('progress', function(e) {
-                        if (e.lengthComputable) {
-                            var percent = Math.round((e.loaded / e.total) * 100);
-                            $('#progress-bar').css('width', percent + '%');
-                        }
-                    });
-                    return xhr;
-                },
-                type: 'POST',
-                url: '/',  // your upload url
-                data: formData,
-                processData: false,
-                contentType: false
-            }).done(function(response) {
-                // handle success
-            }).fail(function(response) {
+        var formData = new FormData(this);
+        var xhr = new XMLHttpRequest();
+
+        xhr.open('POST', '/', true);  // your upload url
+
+        xhr.upload.onprogress = function(e) {
+            if (e.lengthComputable) {
+                var percent = Math.round((e.loaded / e.total) * 100);
+                document.getElementById('progress-bar').style.width = percent + '%';
+            }
+        };
+
+        xhr.responseType = 'blob';  // this is important
+
+        xhr.onload = function() {
+            if (xhr.status === 200) {
+                // create an object URL for the blob
+                var url = window.URL.createObjectURL(xhr.response);
+
+                // create a link and simulate a click to download the file
+                var link = document.createElement('a');
+                link.href = url;
+                link.download = 'your_file.csv';  // set a filename
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+            } else {
                 // handle error
-            });
-        });
+            }
+        };
+
+        xhr.send(formData);
+    });
+
     </script>
 </body>
 </html>
