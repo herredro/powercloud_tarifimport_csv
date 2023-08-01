@@ -69,7 +69,7 @@
         var formData = new FormData(this);
         var xhr = new XMLHttpRequest();
 
-        xhr.open('POST', '/', true);  // your upload url
+        xhr.open('POST', '/', true);
 
         xhr.upload.onprogress = function(e) {
             if (e.lengthComputable) {
@@ -78,17 +78,14 @@
             }
         };
 
-        xhr.responseType = 'blob';  // this is important
+        xhr.responseType = 'blob';
 
         xhr.onload = function() {
             if (xhr.status === 200) {
-                // create an object URL for the blob
                 var url = window.URL.createObjectURL(xhr.response);
-
-                // create a link and simulate a click to download the file
                 var link = document.createElement('a');
                 link.href = url;
-                link.download = filename;  // set a filename
+                link.download = filename;
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
