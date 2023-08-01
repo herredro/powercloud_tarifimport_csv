@@ -54,10 +54,14 @@
         <div id="progress-bar"></div>
     </div>
     <script>
+        var filename = ''
         function updateFilename() {
             var input = document.getElementById('file-upload');
-            var filename = input.files[0].name;
-            document.getElementById('textfilename').textContent = "Selected file: " + filename;
+            var name_parts = input.files[0].name.split('.');
+            var extension = name_parts.pop();
+            var basename = name_parts.join('.');
+            filename = basename + "_edit." + extension;
+            document.getElementById('textfilename').textContent = "Selected file: " + input.files[0].name;
         }
         document.getElementById('upload-form').addEventListener('submit', function(e) {
         e.preventDefault();
@@ -84,7 +88,7 @@
                 // create a link and simulate a click to download the file
                 var link = document.createElement('a');
                 link.href = url;
-                link.download = 'your_file.csv';  // set a filename
+                link.download = filename;  // set a filename
                 document.body.appendChild(link);
                 link.click();
                 document.body.removeChild(link);
