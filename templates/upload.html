@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Upload CSV</title>
+    <style>
+        body {
+            background-color: orange;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            margin: 0;
+            font-family: Arial, sans-serif;
+        }
+        h1, form {
+            text-align: center;
+            padding-bottom: 20px;
+        }
+        .custom-file-upload {
+            padding: 16px;
+            background-color: #4CAF50; /* Green */
+            color: white;
+            border: none;
+            border-radius: 12px;
+            cursor: pointer;
+            transition-duration: 0.1s;
+            font-size: 14px;
+        }
+        .custom-file-upload:hover {
+            border: 4px solid #4CAF50;
+        }
+        .file-upload-input {
+            display: none;
+        }
+        #textfilename {
+            padding-top: 30px;
+        }
+    </style>
+</head>
+<body>
+    <div>
+        <h1>Upload your CSV file</h1>
+        <form method="POST" enctype="multipart/form-data">
+            <input type="file" id="file-upload" class="file-upload-input" name="file" onchange="updateFilename()">
+            <label for="file-upload" class="custom-file-upload">Choose file</label>
+            <input type="submit" class="custom-file-upload">
+        </form>
+        <div id="textfilename"></div>
+    </div>
+    <script>
+        function updateFilename() {
+            var input = document.getElementById('file-upload');
+            var filename = input.files[0].name;
+            document.getElementById('textfilename').textContent = "Selected file: " + filename;
+        }
+    </script>
+</body>
+</html>
