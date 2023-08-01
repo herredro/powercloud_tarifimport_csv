@@ -1,7 +1,8 @@
-from flask import Flask, request, render_template, send_file
+from flask import Flask, request, render_template, Response
 import pandas as pd
 import numpy as np
 import os
+from io import StringIO
 
 app = Flask(__name__)
 
@@ -14,9 +15,15 @@ def upload_file():
         
         df = pd.read_csv(file)
         df = pandas_transform(df)
-        df.to_csv(filename, index=False)
+        # Save the dataframe to a CSV string
+        csv_string = df.to_csv(index=False)
 
-        return send_file(filename, as_attachment=True)
+        # Create a generator for the CSV string
+        def generate():
+            yield csv_string
+        
+        return Response(generate(), mimetype='text/csv', headers={'Content-Disposition': 'attachment;filename='+filename})
+
     return render_template('upload.html')
 
 def pandas_transform(df):
